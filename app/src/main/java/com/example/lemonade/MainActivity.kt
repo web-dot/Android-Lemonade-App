@@ -113,7 +113,32 @@ class MainActivity : AppCompatActivity() {
         // TODO: lastly, before the function terminates we need to set the view elements so that the
         //  UI can reflect the correct state
 
-        
+        when(lemonadeState){
+            SELECT -> {
+                lemonadeState = SQUEEZE
+                lemonSize = lemonTree.pick()
+                squeezeCount = 0
+            }
+
+            SQUEEZE -> {
+                squeezeCount += 1
+                lemonSize -= 1
+
+                when(lemonSize){
+                    0 -> {
+                        lemonadeState = DRINK
+                        lemonSize = -1
+                    }
+                }
+            }
+            DRINK -> {
+                lemonadeState = RESTART
+            }
+            RESTART -> {
+                lemonadeState = SELECT
+            }
+        }
+        setViewElements()
     }
 
     /**
@@ -130,7 +155,23 @@ class MainActivity : AppCompatActivity() {
         //  drawable from the drawable resources. The drawables have the same names as the strings
         //  but remember that they are drawables, not strings.
 
+        when(lemonadeState){
+            SELECT -> textAction.setText(R.string.lemon_select)
+            SQUEEZE -> textAction.setText(R.string.lemon_squeeze)
+            DRINK -> textAction.setText(R.string.lemon_drink)
+            RESTART -> textAction.setText(R.string.lemon_select)
+        }
+        when(lemonadeState){
+            SELECT -> lemonImage?.setImageResource(R.drawable.lemon_tree)
+            SQUEEZE -> lemonImage?.setImageResource(R.drawable.lemon_squeeze)
+            DRINK -> lemonImage?.setImageResource(R.drawable.lemon_drink)
+            RESTART -> lemonImage?.setImageResource(R.drawable.lemon_restart)
+        }
+
     }
+
+
+
 
 
     /**
